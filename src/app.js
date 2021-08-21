@@ -1,4 +1,3 @@
-import './style.css'
 import * as THREE from 'three'
 import ASScroll from '@ashthornton/asscroll'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -10,6 +9,8 @@ import fragment from './js/shaders/fragment.glsl'
 import * as dat from 'dat.gui'
 import gsap from 'gsap'
 import barba from '@barba/core'
+
+import './style.css'
 
 export default class Sketch {
   constructor (options) {

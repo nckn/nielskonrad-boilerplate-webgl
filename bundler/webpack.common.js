@@ -1,17 +1,10 @@
-const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
-
-const dirAssets = path.join(__dirname, 'assets')
+const path = require('path')
 
 module.exports = {
   entry: path.resolve(__dirname, '../src/app.js'),
-  resolve: {
-    modules: [
-      dirAssets
-    ]
-  },
   output: {
     path: path.resolve(__dirname, '../dist'),
     // publicPath: "/",
@@ -62,9 +55,9 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            // options: {
-            //   outputPath: 'assets/img/'
-            // }
+            options: {
+              outputPath: 'assets/images/'
+            }
           }
         ]
       },
