@@ -1,0 +1,69 @@
+.about(data-background="#FFFFFF" data-color="#37384C")
+  .about__wrapper__inner
+    //- section.about__gallery
+    //-   .about__gallery__wrapper
+    //-     each media in about.data.gallery
+    //-       figure.about__gallery__media
+    //-         img.about__gallery__media__image(alt=media.image.alt data-src=media.image.url)
+    h2.about__title(data-animation="paragraph")!=about.data.body[0].primary.text.replace(/\n/g, '<br>')
+    .about__project__list__wrapper
+      each project in projects
+        .about__project__wrapper
+          .line-std#lineStd(data-animation="seperator")
+          //- a.about__project__link(data-index=index href=Link(project.domain_project))
+          .about__project__half.about__project__half--image
+            figure.about__project__media(data-animation="parallax")
+              img.about__project__media__image(
+                alt=project.data.project_main_image.alt
+                data-src=project.data.project_main_image.url
+                data-model-src=project.data.project_main_image.url
+              )
+          .about__project__half.about__project__half--text
+            a.about__project__link
+              h3.about__project__text.about__project__title(data-animation="paragraph")=project.data.title
+              h4.about__project__text.about__project__description(data-animation="paragraph")!=PrismicDOM.RichText.asHtml(project.data.project_description)
+
+    each section, index in about.data.body
+      //- if section.slice_type == 'title'
+      //-   h2.about__title(data-animation="paragraph")!=section.primary.text.replace(/\n/g, '<br>')
+
+      if section.slice_type == 'content'
+        section.about__content(class=`${section.primary.type === 'Left' ? 'about__content--left' : 'about__content--right'}`)
+          .about__content__wrapper
+            .about__content__box
+              p.about__content__label(data-animation="paragraph")!=section.primary.label
+
+              .about__content__description(data-animation="paragraph")!=PrismicDOM.RichText.asHtml(section.primary.description)
+
+            figure.about__content__media(data-animation="parallax")
+              img.about__content__media__image(alt=section.primary.image.alt data-src=section.primary.image.url)
+        
+
+      if section.slice_type == 'highlight'
+        section.about__highlight
+          .about__highlight__wrapper
+            a.about__highlight__link(
+              href="section.primary.link.url"
+              target="_blank"
+            )
+              if section.primary.label
+                p.about__highlight__label(data-animation="paragraph")=section.primary.label
+
+              h3.about__highlight__title(data-animation="highlight")=section.primary.title
+
+            .about__highlight__medias
+              each media, mediaIndex in section.items
+                figure.about__highlight__media(data-animation="parallax")
+                  img.about__highlight__media__image(alt=media.image.alt data-src=media.image.url)
+
+      //- if section.slice_type == 'gallery'
+      //-   section.about__gallery
+      //-     .about__gallery__wrapper
+      //-       each media in section.items
+      //-         figure.about__gallery__media
+      //-           img.about__gallery__media__image(alt=media.image.alt data-src=media.image.url)
+
+    footer.about__footer
+      .about__footer__copyright!=about.data.footer_copyright
+
+      .about__footer__credits!="PrismicDOM.RichText.asHtml(about.data.footer_credits)"

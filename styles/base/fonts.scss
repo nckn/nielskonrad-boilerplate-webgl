@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+@font-face {
+  font-family: $font-inter-bold;
+  src: url('../fonts/Inter-Bold.woff2') format('woff2'),
+      url('../fonts/Inter-Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-inter;
+  src: url('../fonts/Inter-Regular.woff2') format('woff2'),
+      url('../fonts/Inter-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-inter-medium;
+  src: url('../fonts/Inter-Medium.woff2') format('woff2'),
+      url('../fonts/Inter-Medium.woff') format('woff');
+  // font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-inter-light;
+  src: url('../fonts/Inter-Light.woff2') format('woff2'),
+      url('../fonts/Inter-Light.woff') format('woff');
+  // font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+// @font-face {
+//   // font-family: $ibmplex-sans-var-roman;
+//   font-family: 'IBMPlexSansVarRoman';
+//   src: url('../fonts/IBMPlexSansVar-Roman.ttf') format('ttf');
+//   font-style: normal;
+//   font-display: swap;
+// }
+
+@font-face {
+	font-family: "IBMPlexSansRomanVariable";
+	src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/85648/IBMPlexSansVar-Roman.ttf");
+}
+
+@font-face {
+	font-family: "InterVariable";
+	src: url('../fonts/Inter-VariableFont_slnt,wght.ttf');
+}
+

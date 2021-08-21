@@ -1,0 +1,47 @@
+
+%fullsize {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &.pos-abs {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+%cover {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+%center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+%spreadout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin ratio ($height, $width) {
+  font-size: 0;
+  overflow: hidden;
+  position: relative;
+
+  &:after {
+    content: '';
+    display: inline-block;
+    padding-top: $width / $height * 100%;
+    width: 100%;
+  }
+}
