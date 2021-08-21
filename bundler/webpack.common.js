@@ -1,13 +1,22 @@
+const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
-const path = require('path')
+
+const dirAssets = path.join(__dirname, 'assets')
 
 module.exports = {
   entry: path.resolve(__dirname, '../src/app.js'),
+  resolve: {
+    modules: [
+      dirAssets
+    ]
+  },
   output: {
+    path: path.resolve(__dirname, '../dist'),
+    // publicPath: "/",
     filename: 'bundle.[contenthash].js',
-    path: path.resolve(__dirname, '../dist')
+    // chunkFilename: "static/js/[name].chunk.js"
   },
   devtool: 'source-map',
   plugins: [
@@ -15,7 +24,13 @@ module.exports = {
       patterns: [{ from: path.resolve(__dirname, '../static') }]
     }),
     new HtmlWebpackPlugin({
+      filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.html'),
+      minify: true
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'subpage.html',
+      template: path.resolve(__dirname, '../src/subpage.html'),
       minify: true
     }),
     new MiniCSSExtractPlugin()
@@ -47,9 +62,9 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {
-              outputPath: 'assets/images/'
-            }
+            // options: {
+            //   outputPath: 'assets/img/'
+            // }
           }
         ]
       },

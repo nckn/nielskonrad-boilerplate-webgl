@@ -1,3 +1,4 @@
+import './style.css'
 import * as THREE from 'three'
 import ASScroll from '@ashthornton/asscroll'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -96,7 +97,7 @@ export default class Sketch {
         {
           name: 'from-subpage-transition',
           from: {
-            namespace: ['./src/subpage']
+            namespace: ['subpage']
           },
           leave (data) {
             that.asscroll.disable()
