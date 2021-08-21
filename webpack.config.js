@@ -10,7 +10,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev'
 
 const dirApp = path.join(__dirname, 'app')
-const dirShared = path.join(__dirname, 'shared')
+const dirAssets = path.join(__dirname, 'assets')
 const dirStyles = path.join(__dirname, 'styles')
 const dirNode = 'node_modules'
 
@@ -23,7 +23,7 @@ module.exports = {
   resolve: {
     modules: [
       dirApp,
-      dirShared,
+      dirAssets,
       dirStyles,
       dirNode
     ]
@@ -37,7 +37,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: './shared',
+          from: './assets',
           to: ''
         }
       ]

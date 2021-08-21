@@ -5,6 +5,11 @@
   user-select: none;
 }
 
+html,
+body {
+  overflow: hidden;
+}
+
 html {
   @extend %cover;
 

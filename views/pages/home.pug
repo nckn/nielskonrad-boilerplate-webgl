@@ -1,19 +1,42 @@
 .home(data-background="none" data-color="#F9F1E7")
-  //- .home__pitch
-  //-   h1 Lorem ipsum ipsum
-  .container.container--outer.home__wrapper
-    .section.section--home.section--one
-      .container.container--inner
-        h1.text.text--center.text--title.home__titles__title__text(data-animation="paragraph") test 1
-    .section.section--home.section--two
-      .container.container--fullwidth
-        h2.text.text--center.text--subtitle.home__titles__title__text(data-animation="paragraph") test 2
-  //-     h1.home__titles__title__text(data-animation="paragraph") test
-  //- .container.container--outer
-  //-   .container.container--inner
-  //-     .home__titles__text__pair
-  //-       .home__titles__text.home__titles__title
-  //-         h2.home__titles__title__text test
-  //-     .home__titles__text__pair
-  //-       .home__titles__text.home__titles__title
-  //-         h2.home__titles__title__text test
+  div(data-barba='wrapper')
+    div(data-barba='container' data-barba-namespace='home')
+      div(asscroll-container='')
+        .scroll-wrap
+          //- BEGIN content
+          .content
+            //- BEGIN item
+            //- a.item(href='subpage.pug')
+            .item
+              img.js-image(src='./img/1.jpg' alt='')
+              h2 Some title
+              p And some very interesting description.
+            //- END item
+            //- BEGIN item
+            .item
+              img.js-image(src='./img/2.jpg' alt='')
+              h2 Some title
+              p And some very interesting description.
+            //- END item
+            //- BEGIN item
+            .item
+              img.js-image(src='./img/3.jpg' alt='')
+              h2 Some title
+              p And some very interesting description.
+            //- END item
+            //- BEGIN item
+            .item
+              img.js-image(src='./img/4.jpg' alt='')
+              h2 Some title
+              p And some very interesting description.
+            //- END item
+            //- BEGIN item
+            .item
+              img.js-image(src='./img/case1.jpg' alt='')
+              h2 Some title
+              p And some very interesting description.
+            //- END item
+          //- END content
+      //- end barba
+      .curtain
+      #container

@@ -1,4 +1,4 @@
-import { Texture } from 'ogl'
+// import { Texture } from 'ogl'
 import GSAP from 'gsap'
 
 import each from 'lodash/each'
@@ -9,7 +9,8 @@ import { DEFAULT as ease } from 'utils/easings'
 import { split } from 'utils/text'
 
 export default class Preloader extends Component {
-  constructor ({ canvas, callbackFakingPreloading }) {
+  // constructor ({ canvas, callbackFakingPreloading }) {
+  constructor ({ callbackFakingPreloading }) {
     super({
       element: '.preloader',
       elements: {
@@ -19,7 +20,7 @@ export default class Preloader extends Component {
       }
     })
 
-    this.canvas = canvas
+    // this.canvas = canvas
 
     this.callback = callbackFakingPreloading
 
@@ -109,21 +110,21 @@ export default class Preloader extends Component {
 
     this.animateIn.call(_ => {
       window.ASSETS.forEach(image => {
-        const texture = new Texture(this.canvas.gl, {
-          generateMipmaps: false
-        })
+        // const texture = new Texture(this.canvas.gl, {
+        //   generateMipmaps: false
+        // })
 
-        const media = new window.Image()
+        // const media = new window.Image()
 
-        media.crossOrigin = 'anonymous'
-        media.src = image
-        media.onload = _ => {
-          texture.image = media
+        // media.crossOrigin = 'anonymous'
+        // media.src = image
+        // media.onload = _ => {
+        //   texture.image = media
 
-          this.onAssetLoaded()
-        }
+        //   this.onAssetLoaded()
+        // }
 
-        window.TEXTURES[image] = texture
+        // window.TEXTURES[image] = texture
       })
     })
   }
