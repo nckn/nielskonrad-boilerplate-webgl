@@ -1,3 +1,22 @@
+``` bash
+# Install dependencies
+npm install
+
+# Run the local server at localhost:8080
+npm run start
+
+# Build for production in the dist/ directory
+npm run build
+```
+
+
+### devDependencies
+$ npm install --save-dev concurrently 
+
+### dependencies
+$ npm install --save nodemon dotenv morgan express errorhandler method-override ua-parser-js
+
+
 ##### Misc tips
 https://dev.to/simonpaix/10-useful-vs-code-shortcuts-you-should-know-42m
 

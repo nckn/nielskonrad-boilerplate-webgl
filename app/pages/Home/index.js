@@ -93,16 +93,16 @@ export default class extends Page {
 
   onWheel (event) {
     console.log('onWheel pages/Home')
-    this.titles.onWheel(event)
+    // this.titles.onWheel(event)
   }
 
   /**
    * Loop.
    */
   update () {
-    super.update()
+    // super.update()
 
-    this.titles.update()
+    // this.titles.update()
   }
 
   /**
