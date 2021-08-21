@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const path = require('path')
@@ -18,15 +19,25 @@ module.exports = {
       patterns: [{ from: path.resolve(__dirname, '../static') }]
     }),
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.resolve(__dirname, '../src/index.html'),
-      minify: true
+      template: path.resolve(__dirname, '../src/index.pug'),
+      filename: 'index.pug',
+      minify: false
     }),
     new HtmlWebpackPlugin({
-      filename: 'subpage.html',
-      template: path.resolve(__dirname, '../src/subpage.html'),
-      minify: true
+      template: path.resolve(__dirname, '../src/subpage.pug'),
+      filename: 'subpage.pug',
+      minify: false
     }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.pug',
+    //   // template: path.resolve(__dirname, '../src/index.pug'),
+    //   minify: true
+    // }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'subpage.html',
+    //   template: path.resolve(__dirname, '../src/subpage.html'),
+    //   minify: true
+    // }),
     new ImageMinimizerPlugin({
       minimizerOptions: {
         plugins: [
@@ -36,6 +47,7 @@ module.exports = {
         ]
       }
     }),
+    new HtmlWebpackPugPlugin(),
     new MiniCSSExtractPlugin()
   ],
   module: {
