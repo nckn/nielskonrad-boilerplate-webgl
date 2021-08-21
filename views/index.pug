@@ -1,0 +1,54 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title="Shader boilerplate - Niels Konrad"
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Coustard:wght@400;900&display=swap" rel="stylesheet")
+    //- <!-- <link rel="stylesheet" href="style.css"> -->
+  body
+    .header
+      a.logo(href='index.pug') Title Of Project
+    div(data-barba='wrapper')
+      div(data-barba='container' data-barba-namespace='home')
+        div(asscroll-container='')
+          .scroll-wrap
+            //- BEGIN content
+            .content
+              //- BEGIN item
+              a.item(href='subpage.pug')
+                img.js-image(src='img/1.jpg' alt='')
+                h2 Some title
+                p And some very interesting description.
+              //- END item
+              //- BEGIN item
+              a.item(href='subpage.pug')
+                img.js-image(src='img/2.jpg' alt='')
+                h2 Some title
+                p And some very interesting description.
+              //- END item
+              //- BEGIN item
+              a.item(href='subpage.pug')
+                img.js-image(src='img/3.jpg' alt='')
+                h2 Some title
+                p And some very interesting description.
+              //- END item
+              //- BEGIN item
+              a.item(href='subpage.pug')
+                img.js-image(src='img/4.jpg' alt='')
+                h2 Some title
+                p And some very interesting description.
+              //- END item
+              //- BEGIN item
+              a.item(href='subpage.pug')
+                img.js-image(src='img/case1.jpg' alt='')
+                h2 Some title
+                p And some very interesting description.
+              //- END item
+            //- END content
+    //- end barba
+    .curtain
+    #container
+    //- <script src="js/app.js"></script>

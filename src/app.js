@@ -1,324 +1,199 @@
-import * as THREE from 'three'
-import ASScroll from '@ashthornton/asscroll'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-// import fragment from './shaders/fragment.glsl' // TODO alias path packages
-// import vertex from './shaders/vertex.glsl'
-import vertex from './js/shaders/vertex.glsl'
-import fragment from './js/shaders/fragment.glsl'
-// import testTexture from '../img/texture.jpg';
-import * as dat from 'dat.gui'
-import gsap from 'gsap'
-import barba from '@barba/core'
+require('dotenv').config()
 
-import './style.css'
+const logger = require('morgan')
+const express = require('express')
+const errorHandler = require('errorhandler')
+const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
+const find = require('lodash/find')
 
-export default class Sketch {
-  constructor (options) {
-    this.container = options.domElement
-    this.width = this.container.offsetWidth
-    this.height = this.container.offsetHeight
+const app = express()
+const path = require('path')
+const port = 4321
 
-    this.camera = new THREE.PerspectiveCamera( 30, this.width / this.height, 10, 1000 )
-    this.camera.position.z = 600
+app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(methodOverride())
+app.use(errorHandler())
+app.use(express.static(path.join(__dirname, 'public')))
 
-    this.camera.fov = (2 * Math.atan(this.height / 2 / 600) * 180) / Math.PI
-    this.imagesAdded = 0
+// const Prismic = require('@prismicio/client')
+// const PrismicDOM = require('prismic-dom')
+const UAParser = require('ua-parser-js')
 
-    this.scene = new THREE.Scene()
+const initApi = req => {
+  return Prismic.getApi(process.env.PRISMIC_ENDPOINT, {
+    accessToken: process.env.PRISMIC_ACCESS_TOKEN,
+    req
+  })
+}
 
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true
+const handleLinkResolver = doc => {
+  // if (doc.type === 'project') {
+  //   return `/detail/${doc.uid}`
+  // }
+
+  return '/'
+}
+
+app.use((req, res, next) => {
+  const ua = UAParser(req.headers['user-agent'])
+
+  res.locals.isDesktop = ua.device.type === undefined
+  res.locals.isPhone = ua.device.type === 'mobile'
+  res.locals.isTablet = ua.device.type === 'tablet'
+
+  res.locals.Link = handleLinkResolver
+
+  // res.locals.Numbers = index => {
+  //   return index == 0 ? 'One' : index == 1 ? 'Two' : index == 2 ? 'Three' : index == 3 ? 'Four' : '';
+  // }
+
+  // res.locals.PrismicDOM = PrismicDOM
+
+  next()
+})
+
+app.set('views', path.join(__dirname, '../views'))
+app.set('view engine', 'pug')
+
+const handleRequest = async api => {
+  const about = await api.getSingle('about')
+  const home = await api.getSingle('home')
+  const meta = await api.getSingle('meta')
+  const navigation = await api.getSingle('navigation')
+  const preloader = await api.getSingle('preloader')
+
+  // console.log(home)
+
+  // console.log('productsData')
+  // console.log(productsData[0])
+  
+  const { results: domains } = await api.query(Prismic.Predicates.at('document.type', 'domain'), {
+    fetchLinks: 'project.project_main_image'
+  })
+  console.log('domains')
+  console.log(domains)
+  // console.log('domains project url')
+  // // console.log(domains[0].data.projects[0].domain_project.data.project_main_image)
+  // console.log(domains[0].data)
+  
+  const { results: projectsData } = await api.query(Prismic.Predicates.at('document.type', 'project'), {
+    fetchLinks: 'domain.title',
+    pageSize: 100
+  })
+
+  const projects = projectsData
+  console.log('projectsData')
+  console.log(projectsData[0].data.project_main_image)
+  
+  // const products = []
+  
+  const domainProjects = []
+
+  domains.forEach(domain => {
+    // console.log('domain')
+    // console.log(domain)
+    domain.data.projects.forEach(({ domain_project: { uid } }, index) => {
+      // console.log('projectsData')
+      // console.log(projectsData)
+      // console.log('domain')
+      // console.log(domain.data)
+      // if (index === 0) {
+      //   console.log('domain')
+      //   console.log(domain.data.domain_projects)
+      // }
+      domainProjects.push(find(projectsData, { uid }))
     })
-    this.renderer.setPixelRatio(window.devicePixelRatio)
-    // this.renderer.setPixelRatio(2);
-    this.container.appendChild(this.renderer.domElement)
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.materials = []
+  })
 
-    this.asscroll = new ASScroll({
-      disableRaf: true
-    })
+  const assets = []
 
-    this.asscroll.enable({
-      horizontalScroll: !document.body.classList.contains('b-subpage')
-    })
-    this.time = 0
-    // this.setupSettings()
+  home.data.gallery.forEach(item => {
+    assets.push(item.image.url)
+  })
 
-    this.addObjects()
-    this.addClickEvents()
-    this.resize()
-    this.render()
+  about.data.gallery.forEach(item => {
+    assets.push(item.image.url)
+  })
 
-    this.barba()
-
-    this.setupResize()
-  }
-
-  barba () {
-    this.animationRunning = false
-    let that = this
-    barba.init({
-      transitions: [
-        {
-          name: 'from-home-transition',
-          from: {
-            namespace: ['home']
-          },
-          leave (data) {
-            that.animationRunning = true
-            that.asscroll.disable()
-            return gsap.timeline().to(data.current.container, {
-              opacity: 0,
-              duration: 0.5
-            })
-          },
-          enter (data) {
-            that.asscroll = new ASScroll({
-              disableRaf: true,
-              containerElement: data.next.container.querySelector(
-                '[asscroll-container]'
-              )
-            })
-            that.asscroll.enable({
-              newScrollElements: data.next.container.querySelector(
-                '.scroll-wrap'
-              )
-            })
-            return gsap.timeline().from(data.next.container, {
-              opacity: 0,
-              onComplete: () => {
-                that.container.style.visibility = 'hidden'
-                that.animationRunning = false
-              }
-            })
-          }
-        },
-        {
-          name: 'from-subpage-transition',
-          from: {
-            namespace: ['subpage']
-          },
-          leave (data) {
-            that.asscroll.disable()
-            return gsap
-              .timeline()
-              .to('.curtain', {
-                duration: 0.3,
-                y: 0
-              })
-              .to(data.current.container, {
-                opacity: 0
-              })
-          },
-          enter (data) {
-            that.asscroll = new ASScroll({
-              disableRaf: true,
-              containerElement: data.next.container.querySelector(
-                '[asscroll-container]'
-              )
-            })
-            that.asscroll.enable({
-              horizontalScroll: true,
-              newScrollElements: data.next.container.querySelector(
-                '.scroll-wrap'
-              )
-            })
-            // cleeaning old arrays
-            that.imageStore.forEach(m => {
-              that.scene.remove(m.mesh)
-            })
-            that.imageStore = []
-            that.materials = []
-            that.addObjects()
-            that.resize()
-            that.addClickEvents()
-            that.container.style.visibility = 'visible'
-
-            return gsap
-              .timeline()
-              .to('.curtain', {
-                duration: 0.3,
-                y: '-100%'
-              })
-              .from(data.next.container, {
-                opacity: 0
-              })
-          }
-        }
-      ]
-    })
-  }
-
-  addClickEvents () {
-    this.imageStore.forEach(i => {
-      i.img.addEventListener('click', () => {
-        let tl = gsap
-          .timeline()
-          .to(i.mesh.material.uniforms.uCorners.value, {
-            x: 1,
-            duration: 0.4
-          })
-          .to(
-            i.mesh.material.uniforms.uCorners.value,
-            {
-              y: 1,
-              duration: 0.4
-            },
-            0.1
-          )
-          .to(
-            i.mesh.material.uniforms.uCorners.value,
-            {
-              z: 1,
-              duration: 0.4
-            },
-            0.2
-          )
-          .to(
-            i.mesh.material.uniforms.uCorners.value,
-            {
-              w: 1,
-              duration: 0.4
-            },
-            0.3
-          )
-      })
-    })
-  }
-  setupSettings () {
-    this.settings = {
-      progress: 0
-    }
-    this.gui = new dat.GUI()
-    this.gui.add(this.settings, 'progress', 0, 1, 0.001)
-  }
-
-  resize () {
-    this.width = this.container.offsetWidth
-    this.height = this.container.offsetHeight
-    this.renderer.setSize(this.width, this.height)
-    this.camera.aspect = this.width / this.height
-    this.camera.updateProjectionMatrix()
-
-    this.camera.fov = (2 * Math.atan(this.height / 2 / 600) * 180) / Math.PI
-
-    this.materials.forEach(m => {
-      m.uniforms.uResolution.value.x = this.width
-      m.uniforms.uResolution.value.y = this.height
-    })
-
-    this.imageStore.forEach(i => {
-      let bounds = i.img.getBoundingClientRect()
-      i.mesh.scale.set(bounds.width, bounds.height, 1)
-      i.top = bounds.top
-      i.left = bounds.left + this.asscroll.currentPos
-      i.width = bounds.width
-      i.height = bounds.height
-
-      i.mesh.material.uniforms.uQuadSize.value.x = bounds.width
-      i.mesh.material.uniforms.uQuadSize.value.y = bounds.height
-
-      i.mesh.material.uniforms.uTextureSize.value.x = bounds.width
-      i.mesh.material.uniforms.uTextureSize.value.y = bounds.height
-    })
-  }
-
-  setupResize () {
-    window.addEventListener('resize', this.resize.bind(this))
-  }
-
-  addObjects () {
-    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100)
-    console.log(this.geometry)
-    this.material = new THREE.ShaderMaterial({
-      // wireframe: true,
-      uniforms: {
-        time: { value: 1.0 },
-        uProgress: { value: 0 },
-        uTexture: { value: null },
-        uTextureSize: { value: new THREE.Vector2(100, 100) },
-        uCorners: { value: new THREE.Vector4(0, 0, 0, 0) },
-        uResolution: { value: new THREE.Vector2(this.width, this.height) },
-        uQuadSize: { value: new THREE.Vector2(300, 300) }
-      },
-      vertexShader: vertex,
-      fragmentShader: fragment
-    })
-
-    this.mesh = new THREE.Mesh(this.geometry, this.material)
-    this.mesh.scale.set(300, 300, 1)
-    // this.scene.add( this.mesh );
-    this.mesh.position.x = 300
-
-    this.images = [...document.querySelectorAll('.js-image')]
-
-    this.imageStore = this.images.map(img => {
-      let bounds = img.getBoundingClientRect()
-      let m = this.material.clone()
-      this.materials.push(m)
-      let texture = new THREE.Texture(img)
-      texture.needsUpdate = true
-
-      m.uniforms.uTexture.value = texture
-
-      // img.addEventListener('mouseout',()=>{
-      //     this.tl = gsap.timeline()
-      //     .to(m.uniforms.uCorners.value,{
-      //         x:0,
-      //         duration: 0.4
-      //     })
-      //     .to(m.uniforms.uCorners.value,{
-      //         y:0,
-      //         duration: 0.4
-      //     },0.1)
-      //     .to(m.uniforms.uCorners.value,{
-      //         z:0,
-      //         duration: 0.4
-      //     },0.2)
-      //     .to(m.uniforms.uCorners.value,{
-      //         w:0,
-      //         duration: 0.4
-      //     },0.3)
-      // })
-
-      let mesh = new THREE.Mesh(this.geometry, m)
-      this.scene.add(mesh)
-      mesh.scale.set(bounds.width, bounds.height, 1)
-      return {
-        img: img,
-        mesh: mesh,
-        width: bounds.width,
-        height: bounds.height,
-        top: bounds.top,
-        left: bounds.left
-      }
-    })
-  }
-
-  setPosition () {
-    // console.log(this.asscroll.currentPos)
-    if (!this.animationRunning) {
-      this.imageStore.forEach(o => {
-        o.mesh.position.x =
-          -this.asscroll.currentPos + o.left - this.width / 2 + o.width / 2
-        o.mesh.position.y = -o.top + this.height / 2 - o.height / 2
+  about.data.body.forEach(section => {
+    if (section.slice_type === 'gallery') {
+      section.items.forEach(item => {
+        assets.push(item.image.url)
       })
     }
-  }
+  })
+  
+  domains.forEach(domain => {
+    domain.data.projects.forEach(item => {
+      // console.log('item')
+      // console.log(item)
+      assets.push(item.domain_project.data.project_main_image.url)
+      // assets.push(item.products_product.data.model.url)
+    })
+  })
 
-  render () {
-    this.time += 0.05
-    this.material.uniforms.time.value = this.time
-
-    this.asscroll.update()
-    this.setPosition()
-    this.renderer.render(this.scene, this.camera)
-    requestAnimationFrame(this.render.bind(this))
+  return {
+    about,
+    assets,
+    domains,
+    home,
+    meta,
+    navigation,
+    preloader,
+    // products,
+    domainProjects,
+    projects
   }
 }
 
-new Sketch({
-  domElement: document.getElementById('container')
+app.get('/', async (req, res) => {
+  // const api = await initApi(req)
+  // const defaults = await handleRequest(api)
+
+  res.render('index', {
+    // ...defaults
+  })
+})
+
+// app.get('/about', async (req, res) => {
+//   const api = await initApi(req)
+//   const defaults = await handleRequest(api)
+
+//   res.render('base', {
+//     ...defaults
+//   })
+// })
+
+// app.get('/collections', async (req, res) => {
+//   const api = await initApi(req)
+//   const defaults = await handleRequest(api)
+
+//   res.render('base', {
+//     ...defaults
+//   })
+// })
+
+// app.get('/domains', async (req, res) => {
+//   const api = await initApi(req)
+//   const defaults = await handleRequest(api)
+
+//   res.render('base', {
+//     ...defaults
+//   })
+// })
+
+// app.get('/detail/:uid', async (req, res) => {
+//   const api = await initApi(req)
+//   const defaults = await handleRequest(api)
+
+//   res.render('base', {
+//     ...defaults
+//   })
+// })
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
 })

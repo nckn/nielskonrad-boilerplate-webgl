@@ -1,0 +1,50 @@
+doctype html
+html(lang="en")
+  head
+	  meta(charset="UTF-8")
+    title="Document"
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Coustard:wght@400;900&display=swap" rel="stylesheet")
+    link(rel="stylesheet" href="style.css")
+  body(class="b-subpage")
+    .header
+      a.logo(href='index.html') Title Of Project
+    div(data-barba='wrapper')
+      div(data-barba='container' data-barba-namespace='subpage')
+        div(asscroll-container='')
+          .scroll-wrap
+            //- BEGIN content
+            .subpage
+              //- BEGIN item
+              .single
+                //- <div class="single__top" style="background-image: url(../static/assets/img/texture.jpg)">
+              .single__content
+                h1
+                  a(href='index.html')  Some title
+                figure
+                  img(src='../static/assets/img/1.jpg' width='300' alt='')
+                  figcaption
+                    p
+                      | Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste ipsum doloribus commodi atque pariatur! Quia expedita debitis aperiam molestiae eum recusandae, corrupti architecto aut quod sapiente voluptas consequatur, explicabo mollitia.
+                figure
+                  img(src='../static/assets/img/1.jpg' width='300' alt='')
+                  figcaption
+                    p
+                      | Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste ipsum doloribus commodi atque pariatur! Quia expedita debitis aperiam molestiae eum recusandae, corrupti architecto aut quod sapiente voluptas consequatur, explicabo mollitia.
+                p
+                  | Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste ipsum doloribus commodi atque pariatur! Quia expedita debitis aperiam molestiae eum recusandae, corrupti architecto aut quod sapiente voluptas consequatur, explicabo mollitia.
+                p
+                  | Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste ipsum doloribus commodi atque pariatur! Quia expedita debitis aperiam molestiae eum recusandae, corrupti architecto aut quod sapiente voluptas consequatur, explicabo mollitia.
+                //- BEGIN footer
+                footer.footer
+                  p &copy; 2021
+                //- END footer
+            //- END item
+          //- END subpage
+      //- scroll divs
+    //- end barba
+    .curtain
+    #container
+    //- <script src="js/app.js"></script>
+
