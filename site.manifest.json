@@ -1,0 +1,13 @@
+{
+  "name": "Niels Konrads website template",
+  "short_name": "Website template",
+  "description": "A simple setup with all you need for most things",
+  "start_url": "/",
+  "background_color": "#000000",
+  "theme_color": "#0f4a73",
+  "icons": [{
+    "src": "icon-256.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }]
+}
