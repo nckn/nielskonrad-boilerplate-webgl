@@ -1,6 +1,7 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -26,6 +27,15 @@ module.exports = {
       template: path.resolve(__dirname, '../src/subpage.html'),
       minify: true
     }),
+    new ImageMinimizerPlugin({
+      minimizerOptions: {
+        plugins: [
+          ['gifsicle', { interlaced: true }],
+          ['jpegtran', { progressive: true }],
+          ['optipng', { optimizationLevel: 8 }]
+        ]
+      }
+    }),
     new MiniCSSExtractPlugin()
   ],
   module: {
@@ -50,14 +60,24 @@ module.exports = {
       },
 
       // Images
+      // {
+      //   test: /\.(jpg|png|gif|svg)$/,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[path][name].[ext]'
+      //         // outputPath: 'assets/images/'
+      //       }
+      //     }
+      //   ]
+      // },
+      // Load image types
       {
-        test: /\.(jpg|png|gif|svg)$/,
+        test: /\.(jpe?g|png|gif|svg|webp)$/i,
         use: [
           {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'assets/images/'
-            }
+            loader: ImageMinimizerPlugin.loader
           }
         ]
       },
