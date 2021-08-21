@@ -1,0 +1,10 @@
+{
+  "name": "nielskonrad-boilerplate-webgl",
+  "author": "Niels Konrad",
+  "version": "1.0.0",
+  "license": "ISC",
+  "description": "A boilerplate to quickly setup new webgl driven projects",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
