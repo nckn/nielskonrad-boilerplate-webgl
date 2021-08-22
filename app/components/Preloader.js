@@ -54,7 +54,7 @@ export default class Preloader extends Component {
       console.log('no data')
       this.onLoaded()
       // console.log('callback')
-      this.callback()
+      // this.callback()
       // animate and remove the .preloader elem after 1000 ms
       // setTimeout(_ => {
       //   this.animateOut.to(this.element, {
@@ -209,5 +209,7 @@ export default class Preloader extends Component {
   destroy () {
     console.log('trying to destroy')
     this.element.parentNode.removeChild(this.element)
+    // Now tell parent that we are done preloading
+    this.callback()
   }
 }

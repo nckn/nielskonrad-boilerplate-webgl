@@ -40,23 +40,30 @@ class App {
     this.init()
 
     this.addObjects()
-    this.addTestObject()
+    // this.addTestObject()
 
     this.createPreloader()
     this.createTransition()
     this.createNavigation()
     this.createPages()
 
-    this.initASScroll()
+    this.onResize()
 
     this.addEventListeners()
     this.addClickEventsForImages()
     this.addLinkListeners()
 
+    
+
+    console.log('should react - init')
+
     // Barba
     // this.setupBarba()
 
-    this.onResize()
+    // setTimeout(_ => {
+    //   this.initASScroll()
+    //   this.onResize()
+    // }, 3000)
 
     console.log('this.update()')
     this.update()
@@ -195,6 +202,10 @@ class App {
       callbackFakingPreloading: () => {
         console.log('faking preloading works')
         // this.onPreloaded()
+        // Update the 3D scene and camera
+        console.log('after preloader - initScroll')
+        this.initASScroll()
+        this.onResize()
       }
     })
 
@@ -288,6 +299,7 @@ class App {
   }
 
   resizeSceneAndViewPort() {
+    console.log('resizeSceneAndViewPort 1c')
     this.width = this.container.offsetWidth
     this.height = this.container.offsetHeight
     this.renderer.setSize(this.width, this.height)
@@ -318,6 +330,7 @@ class App {
   }
 
   onTouchDown (event) {
+    console.log('should react - OnTouchDown')
     // if (this.canvas && this.canvas.onTouchDown) {
     //   this.canvas.onTouchDown(event)
     // }
@@ -343,6 +356,8 @@ class App {
     // console.log('onWheel app/index')
     // console.log('this.page')
     // console.log(this.page)
+    console.log('should react')
+    // this.onResize()
     const normalizedWheel = NormalizeWheel(event)
 
     if (this.page && this.page.onWheel) {
