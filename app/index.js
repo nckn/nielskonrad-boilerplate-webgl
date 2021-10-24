@@ -204,7 +204,7 @@ class App {
         // this.onPreloaded()
         // Update the 3D scene and camera
         console.log('after preloader - initScroll')
-        this.initASScroll()
+        // this.initASScroll()
         this.onResize()
       }
     })
@@ -366,7 +366,8 @@ class App {
   }
 
   setPosition () {
-    // console.log(this.asscroll.currentPos)
+    console.log('this.asscroll.currentPos')
+    console.log(this.asscroll.currentPos)
     if (!this.animationRunning) {
       this.imageStore.forEach(o => {
         o.mesh.position.x =
